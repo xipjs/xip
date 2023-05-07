@@ -1,0 +1,20 @@
+{
+  "name": "xip_template",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "dev": "vite",
+    "public": "vite --host",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "@xipjs/xip": "^0.2.0"
+  }
+}
