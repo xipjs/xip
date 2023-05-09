@@ -1,1 +1,1 @@
-/*@license xip github.com/xipjs/xip/Licence*/
+/*!@license xip github.com/xipjs/xip/Licence*/

@@ -1,6 +1,6 @@
 # Xip 
 
-Xip is a performant UI framework with declarative components and flexible state
+Xip is a performant UI framework with declarative components and flexible state.
 
 # Features
 - Surgical updates with minimal overhead
@@ -16,10 +16,10 @@ Xip is a performant UI framework with declarative components and flexible state
 	- [⚡Quick Start](#⚡Quick-Start)
 	- [📦 NPM](#📦NPM)
 	- [📮CDN](#📮CDN)
-- [Build a Basic Counter](#Build-a-Basic-Counter)
+- [Counter Example](#Counter-Example)
 - [URL Routing](#URL-Routing)
 - [Reactivity and State Management](#Reactivity-and-State-Management)
-- [The 3 Functions](#The-3-Functions)
+- [Functions](#Functions)
 	- [Engage](#Engage)
 	- [ref](#ref)
 	- [el](#el)
@@ -30,7 +30,7 @@ Xip is a performant UI framework with declarative components and flexible state
 	- [UML](#UML)
 - [Intercept Element Removal](#Intercept-Element-Removal)
 - [In HTML](#In-HTML)
-- [Syntax]([#Syntax)
+- [Syntax](#Syntax)
 	- [JSX](#JSX)
 	- [HyperScript](#HyperScript)
 - [Contact](#Contact)
@@ -43,25 +43,32 @@ Xip is a performant UI framework with declarative components and flexible state
 
 ## ⚡Quick Start
 
-1. Clone the template project:
+1. Initialize the project:
 
 ```shell
-git clone https://github.com/xipjs/Examples/Template.git
+npm create xip "MyApp"
 ```
 
-2. Install:
+
+2. Enter project directory
+
+``` shell
+cd MyApp
+```
+
+3. Install:
 
 ```shell
 npm install
 ```
 
-3. Start Live Development Server:
+4. Start Live Development Server:
 
 ```shell
 npm run dev
 ```
 
-4. Once your App is Done, Build:
+5. Build:
 
 ```shell
 npm run build
@@ -72,7 +79,7 @@ npm run build
 ## 📦 NPM
 
 ```shell
-npm i @xipjs/xip
+npm i @xipjs/xip
 ```
 
 
@@ -80,7 +87,7 @@ npm i @xipjs/xip
 ## 📮CDN
 
 ```html
-<script src="https://github.com/xipjs/Build/xip.min.cjs"></script>
+<script src="https://www.unpkg.com/@xipjs/xip@0.2.2/min/xip.gt.min.js"></script>
 ```
 
 See [In HTML](#In-HTML) for more info
@@ -88,7 +95,7 @@ See [In HTML](#In-HTML) for more info
 ---
 
 
-# Build a Basic Counter
+# Counter Example
 
 1. Define the "Counter" component
 ```jsx
@@ -202,7 +209,8 @@ State.Path.Reg(() => {
 
 # Reactivity and State Management
 
-State can be defined anywhere and in any form (e.g: class, object, varible), to make a value reactive wrap it in the [ref()](#`ref()`) function:
+State can be defined anywhere and in any form (e.g: class, object, variable).
+To make a value reactive, wrap it in the [ref()](#`ref()`) function:
 ```jsx
 // non reactive
 let count = 0
@@ -211,25 +219,41 @@ let count = ref(0)
 // use the value of count
 let component = <div>{count.value}</div>
 ```
-by default nothing will react to "count" so:
+By default nothing will react to "count".
 
 Make the component react to count:
+("react={count.Reg}")
 ```jsx
 let component = <div react={count.Reg}>{count.value}</div>
 ```
-Now the component will check if it can update when "count" is triggered, but even if the value of "count" has changed, the renderer has already evaluated "count.value" and so no changes will be made to the dom.
+Now the component will check for possible update when "count" is triggered.
+Even if the value of "count" has changed, the renderer has already evaluated "count.value", 
+so no changes will be made to the dom.
 
-Only values wrapped in closures can be reevaluated:
+Wrapping the value with a closure tells the renderer to re-evaulate and update the asosiated dom node when asked to rerender:
 ```jsx
 let component = <div react={count.Reg}>{()=>count.value}</div>
 ```
-On the initial render "()=>count.value" will be remembered as a renderable before being evaluated and applied to the dom, then when the component is asked to rerender, it will reevaluate "()=>count.value" and directly update that text node in the dom.
+Any type of child can be wrapped in a closure
+
+## Reactive Attributes
+### className
+If className is wrapped in a closure it becomes reactive:
+```tsx
+let class = ref("")
+
+<div className={()=>class.value} react={class.reg}></div>
+
+```
+When "class" is triggered, the renderer will directly update the "class" attribute of the dom element without making any other changes to the dom.
+
+
 
 ---
 
 
 
-# The 3 Functions
+# Functions
 
 ## `Engage()`
 
@@ -242,10 +266,12 @@ function Engage(
 
 ### Usage:
 
-The first parameter is the Component to be rendered and the second is a callback to add the component to the dom
+The first parameter is the Component to be rendered and the second is a function adding the component to the dom
 
+An object Represinting the already attached element will be returned.
 ```js
-Engage(App, (element) => document.body.replaceChildren(element));
+const component = Engage(App, (element) => document.body.replaceChildren(element));
+component.Remove()
 ```
 
 ## `ref()`
@@ -323,7 +349,7 @@ let Component = el(
 );
 ```
 
-`el()` can be called using jsx or tsx, for example these two components are identical, only using different syntax:
+*Note:* `el()` can be called using jsx, for example:
 
 ```tsx
 <div class="container">container<div/>
@@ -388,11 +414,11 @@ export interface XipElementAttributes {
 
 # Direct Element Access
 
-Three of the [[#Element Attributes]] provide direct access to the dom element at different stages:
+Three of the [Element Attributes](#Element-Attributes) provide direct access to the dom element at different stages:
 
 - `withRender()` while being created
 - `onDom()` once added to the dom
-- `onRemove()` before the element is removed, see [[#Intercept Element Removal]]
+- `onRemove()` before the element is removed
   Each of these functions are provided with the same dom element pointer.
   For access outside of the element use `withRender()` for predisplay delivery:
 
@@ -443,11 +469,11 @@ and use an array for multiple events on a single element:
 # In HTML
 
 JSX cannot be interpreted by a browser,
-so we use [[#HyperScript]] syntax instead.
+so use [HyperScript](#HyperScript) syntax instead.
 
 ## Counter Example
 
-Past this into `index.html` and open in a browser to test
+Paste this into `index.html` and open in a browser to test
 
 ```html
 <!DOCTYPE html>
@@ -456,9 +482,9 @@ Past this into `index.html` and open in a browser to test
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Counter</title>
-    <script defer src="https://github.com/xipjs/Build/xip.min.js"></script>
   </head>
   <body></body>
+  <script src="https://www.unpkg.com/@xipjs/xip@0.2.2/min/xip.gt.min.js"></script>
   <script>
     function Counter(Remove) {
       let count = ref(0);
@@ -478,9 +504,10 @@ Past this into `index.html` and open in a browser to test
 
 ## Add Elements Dynamically along side html elements
 
-_warning:_ removing an element with a selector can cause a memory leak, always use the Remove function provided as the second argument to the  `Engage()` callback function:
+_Caution:_ Removing an element with a selector can cause a memory leak, always use "component.Remove()" on the object returned by `Engage()`:
 ``` js
-Engage(App, (el, Remove) => {});
+let component = Engage(App, (el)=>document.body.appendChild(el));
+component.Remove()
 ```
 
 ```html
@@ -489,8 +516,8 @@ Engage(App, (el, Remove) => {});
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CrystalApp</title>
-    <script src="https://github.com/xipjs/Build/xip.min.js"></script>
+    <title>Multiple Instances</title>
+    <script src="https://www.unpkg.com/@xipjs/xip@0.2.2/min/xip.gt.min.js"></script>
   </head>
   <body>
     <button onclick="NewCounter()">New</button>
@@ -511,9 +538,9 @@ Engage(App, (el, Remove) => {});
     function NewCounter() {
       // Activate a new Counter Component
       let instance = Engage(
-        () => Counter(instance.Remove),
+        () => Counter(() => instance.Remove()),
         (el) => {
-          document.body.replaceChildren(el);
+          document.body.appendChild(el);
         }
       );
     }
@@ -529,7 +556,7 @@ Engage(App, (el, Remove) => {});
 
 ## UML
 
-The following examples demonstrate how components are rendered and how the prosses can be optomised.
+The following examples demonstrate how components are rendered and how the process can be optimized.
 
 ```tsx
 let component = () => {
@@ -565,7 +592,7 @@ displayValue --> |replaceWithNewValue|TextNodeInDom
 
 ```
 
-Optamised:
+Optimized:
 ```tsx
 let component = () => {
 
@@ -606,9 +633,8 @@ displayValue --> |replaceWithNewValue|TextNodeInDom
 
 # Intercept Element Removal
 
-Usually used for exit animations or ensuring data from the dom is correctly captured.
-
-If the `onRemove` element attribute returns a promise. The renderer will wait for the promise to be resolved before removing that element, and if it rejects the element won't be removed.
+If the `onRemove` element attribute returns a promise, the renderer will wait for the promise to resolve before removing that element. 
+If it rejects the element won't be removed.
 Any updates that do not result in the removal of the element will still work while waiting for the promise to resolve (The application will remain responsive, including children of the intercepted element).
 
 
@@ -618,7 +644,7 @@ Any updates that do not result in the removal of the element will still work whi
 
 # Syntax
 
-JSX and Hyperscript are two syntax options to represent html inside JavaScript, neither has capability the other doesn't, except that Hyperscript is valid JavaScript, so JSX must be converted to hyperscript before being executed by the browser.
+JSX and Hyperscript are two syntax options that represent html inside JavaScript. Hyperscript is valid JavaScript, so JSX must be converted to hyperscript before being executed by the browser.
 
 ## HTML Comparison
 
@@ -635,7 +661,7 @@ HTML:
 <script>
   document
     .getElementById("form-id")
-    .addEventListener("submit", (e) => console.log(e));
+    .addEventListener("click", (e) => console.log(e));
 </script>
 ```
 
@@ -643,7 +669,7 @@ JSX:
 ```jsx
 let component = () => {
   return (
-    <form onSubmit={(e) => console.log(e)}>
+    <form onClick={(e) => console.log(e)}>
       <input type="text" />
       <input type="checkbox" name="checkbox" id="1" />
       <button type="submit">Submit</button>

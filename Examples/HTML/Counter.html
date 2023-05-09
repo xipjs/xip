@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter</title>
+  </head>
+  <body></body>
+  <script src="https://www.unpkg.com/@xipjs/xip@0.2.2/min/xip.gt.min.js"></script>
+  <script>
+    function Counter(Remove) {
+      let count = ref(0);
+      return el(
+        "div",
+        { react: count.Reg },
+        el("h1", {}, () => count.value),
+        el("button", { onClick: () => count.Update((v) => v + 1) }, "+"),
+        el("button", { onClick: () => count.Set(count.value - 1) }, "-"),
+        el("hr", {})
+      );
+    }
+    Engage(Counter, (el) => document.body.replaceChildren(el));
+  </script>
+</html>
