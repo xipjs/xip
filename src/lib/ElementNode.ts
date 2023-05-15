@@ -22,8 +22,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-
-
 import { CDN } from "./DomNode";
 import { BuildCDN, Render } from "./Build";
 export class ElementDomNode extends CDN {
@@ -153,16 +151,9 @@ export class ElementDomNode extends CDN {
           if (!value) {
             break;
           }
-          if (Array.isArray(value)) {
-            let nren = () => {
-              value.shift()(newel.style);
-            };
-            value.forEach((item) => {
-              this.Renders.push(item(nren));
-            });
-          } else {
-            value(newel.style);
-          }
+          value(newel.style);
+          this.Renders.push(() => value(newel.style));
+
           break;
         case "Style":
           Object.assign(newel.style, value);

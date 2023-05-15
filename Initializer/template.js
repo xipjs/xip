@@ -51,7 +51,7 @@ const template = {
   <body></body>
   <script type="module" src="./src/index.ts"></script>
 </html>`,
-    "src/app.tsx": `import Counter from "./components/counter";
+    "src/App.tsx": `import Counter from "./components/counter";
 
 export default function App() {
   return <Counter />;
